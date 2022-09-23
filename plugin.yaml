@@ -61,6 +61,10 @@ hooks:
   - type: run-script
     trigger: before-input
     script: snippets/open-pom.py
+  
+  - type: run-script
+    trigger: before-render
+    script: snippets/open-main-class.py
 
   - type: edit
     path: "{% if application_path == 'src.main.java.group_id.artifactory_id.project_nameApplication.java -> src.main.java.com.library.LivroApplication' %}{{application_path_default | replace('.','/')}}.java{% else %}{{directory}}.java{% endif%}"
