@@ -4,6 +4,8 @@ display-name: java-spring-open-feign-plugin
 picture: plugin.png
 category: backend # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/#category
 compatibility:
+  - maven
+  - application.yaml
   - java
   - spring
 about: docs/about.md
@@ -14,18 +16,92 @@ technologies: # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/
   - "Api"
 types:
   - app
+
 inputs:
-  - label: Input Example
+  - label: enter the path of your main class
     type: text
-    name: example
-    default: any text
-  - label: Example of number
-    type: int
-    name: any_number
-    default: "10"
-  - label: Example of list
-    type: multiselect
-    name: any_list
-    items:
-      - item1
-      - item2
+    name: application_path
+    default: src.main.java.group_id.artifactory_id.project_nameApplication.java -> src.main.java.com.library.LivroApplication
+
+computed-inputs:
+  directory: "{{directory_path | replace('.','/')}}"
+  directory_test: "{{directory_test_path | replace('.','/')}}"
+
+hooks:
+  ##
+  # Edit pom.xml add propertie version dependency management spring cloud and spring cloud open feign in pom.xml
+  ##
+  - type: edit
+    path: pom.xml
+    trigger: after-render
+    changes:
+      - search:
+          string: "</properties>"
+          insert-before:
+            snippet: snippets/snippet-pom-propertie.xml.jinja
+          when:
+            not-exists-snippet: snippets/snippet-pom-propertie.xml.jinja
+      - search:
+          string: "</dependencies>"
+          insert-after:
+            snippet: snippets/snippet-pom-dependencymanagement.xml.jinja
+          when:
+            not-exists-snippet: snippets/snippet-pom-dependencymanagement.xml.jinja
+      - search:
+          string: "</dependencies>"
+          insert-before:
+            snippet: snippets/snippet-pom-dependencie.xml.jinja
+          when:
+            not-exists-snippet: snippets/snippet-pom-dependencie.xml.jinja
+  
+  
+  ##
+  # Create path directory and configuring suport clients feign in main class in application.yaml
+  ##
+  - type: run-script
+    trigger: before-input
+    script: snippets/open-pom.py
+
+  - type: edit
+    path: "{% if application_path == 'src.main.java.group_id.artifactory_id.project_nameApplication.java -> src.main.java.com.library.LivroApplication' %}{{application_path_default | replace('.','/')}}.java{% else %}{{directory}}.java{% endif%}"
+    trigger: after-render
+    changes:
+      - search:
+          string: "import org.springframework.boot.SpringApplication;"
+          insert-before:
+            value: "import org.springframework.cloud.openfeign.EnableFeignClients;\n"
+            when:
+              not-exists: "import org.springframework.cloud.openfeign.EnableFeignClients;"
+      - search:
+          string: "@SpringBootApplication"
+          insert-before:
+            value: "@EnableFeignClients\n"
+          when:
+            not-exists: "@EnableFeignClients\n"
+  ##
+  # Configuring timeouts and logging default for all feign clients
+  ##
+  - type: edit
+    path: src/main/resources/application.yaml
+    trigger: after-render
+    changes:
+      - search:
+          string: "spring:"
+          insert-after:
+            snippet: snippets/snippet-config-yaml.yaml.jinja
+          when:
+            not-exists: "feign:"
+      - insert:
+          line: -1
+          snippet: snippets/snippet-integration-urls.yaml.jinja
+          when:
+            not-exists-snippet: snippets/snippet-integration-urls.yaml.jinja
+  - type: edit
+    path: src/test/resources/application-test.yaml
+    trigger: after-render
+    changes:
+      - insert:
+          line: -1
+          snippet: snippets/snippet-integration-urls.yaml.jinja
+          when:
+            not-exists-snippet: snippets/snippet-integration-urls.yaml.jinja

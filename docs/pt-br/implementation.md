@@ -1,31 +1,31 @@
-### Operations
+### Operações
 
-- Creating a Feign HTTP Client
+- Criando um Client HTTP Feign
 
-    1. Create a java interface
-    2. Annotate the class level with `@FeignClient`, and define the name and url argument.
-    3. Create a method signature, defining the return of your API and what are the arguments (Body and Params)
-    4. annotate the method with one of the annotations referring to the HTTP verb mapping from the `org.springframework.web.bind.annotation` package;
+    1. Crie uma interface java 
+    2. Anote a nivel de classe com `@FeignClient`, e defina o argumento name e url.
+    3. Crie uma assinatura de metodo, definindo o retorno da sua API  e quais são os argumentos (Body and Params)
+    4. anote o metodo com uma das anotações referente ao mapeamento de verbo HTTP do package `org.springframework.web.bind.annotation`;
 
         ```java
         @FeignClient(name = "bookClient", url = "https://books.com/api")
         public interface BookClient {
             @GetMapping("/{id}")
-            ResponseEntity<Map<String,Object>> getBookById(@PathVariable Long id);
+            ResponseEntity<Map<String,Object>> getBookById(@PathVariable Long id); 
         }
         ```
 
-    For more information read the [official documentation](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/#spring-cloud-feign)
+    Para mais informações leia a [documentação oficial](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/#spring-cloud-feign)
 
-- Testing an HTTP Client
-    1. Create a test class and annotate it with `@SpringBootTest` and `@AutoConfigureWireMock`
-    2. Inject your HTTP client dependency via attribute injection.
-    3. Create a test method and annotate it with `@Test`
-    4. Configure your Stub:
-        1. Call the Wiremock API through the WireMock.StubFor() Object;
-        2. Define which method will be served;
-        3. Define an object to reply;
-        4. Set the Body, Headers and HTTP Status of your Response.
+- Testando um Client HTTP
+    1. Crie uma classe de teste e anote com `@SpringBootTest` e `@AutoConfigureWireMock`
+    2. Injete a depêndencia do seu client HTTP através da injeção via atributo.
+    3. Crie um metodo de teste e anote-o com `@Test`
+    4. Cofigure seu Stub:
+        1. Chame a API do Wiremock através do Objeto WireMock.StubFor();
+        2. Defina qual method será atendido;
+        3. Defina um objeto para resposta;
+        4. Defina o Body, Headers e Status HTTP da sua Response.  
         ```java
         @SpringBootTest
         @AutoConfigureWireMock
@@ -61,3 +61,4 @@
 
             }
         ```
+ 
