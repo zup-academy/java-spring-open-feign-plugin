@@ -40,6 +40,7 @@ def run(metadata: Metadata = None):
         input_name_text = input_name_text.replace(" ","")
     else:
         input_name_text = input_name.text
+        input_name_text = input_name_text.title()
 
     application_package = f"src.main.java.{group_id.text}.{artifact_id_text}.{input_name_text}"
     
@@ -52,6 +53,8 @@ def run(metadata: Metadata = None):
     directory_test_path = f"src.test.java.{group_id.text}.{artifact_id_text}"
     
     metadata.inputs['application_path_default'] = application_package
+    application_class_full_path = application_package.replace(".","/")
+    metadata.inputs['application_class_full_path'] = f"{application_class_full_path}.java"
     metadata.inputs['directory_path_code'] =f"{group_id.text}.{artifact_id_text}"
     metadata.inputs['directory_path'] = directory_path
     metadata.inputs['directory_test_path'] = directory_test_path

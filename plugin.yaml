@@ -17,12 +17,6 @@ technologies: # Ref: https://docs.stackspot.com/latest/docs/creators-guide/yaml/
 types:
   - app
 
-inputs:
-  - label: enter the path of your main class
-    type: text
-    name: application_path
-    default: src.main.java.group_id.artifactory_id.project_nameApplication.java -> src.main.java.com.library.LivroApplication
-
 computed-inputs:
   directory: "{{directory_path | replace('.','/')}}"
   directory_test: "{{directory_test_path | replace('.','/')}}"
@@ -62,9 +56,8 @@ hooks:
     trigger: before-input
     script: snippets/open-pom.py
   
-
   - type: edit
-    path: "{% if application_path == 'src.main.java.group_id.artifactory_id.project_nameApplication.java -> src.main.java.com.library.LivroApplication' %}{{application_path_default | replace('.','/')}}.java{% else %}{{directory}}.java{% endif%}"
+    path: "{{application_class_full_path}}"
     trigger: after-render
     changes:
       - search:
@@ -86,17 +79,11 @@ hooks:
     path: src/main/resources/application.yaml
     trigger: after-render
     changes:
-      - search:
-          string: "spring:"
-          insert-after:
-            snippet: snippets/snippet-config-yaml.yaml.jinja
-          when:
-            not-exists: "feign:"
       - insert:
           line: -1
-          snippet: snippets/snippet-integration-urls.yaml.jinja
+          snippet: snippets/snippet-config-yaml.yaml.jinja
           when:
-            not-exists-snippet: snippets/snippet-integration-urls.yaml.jinja
+            not-exists-snippet: snippets/snippet-config-yaml.yaml.jinja
   - type: edit
     path: src/test/resources/application-test.yaml
     trigger: after-render

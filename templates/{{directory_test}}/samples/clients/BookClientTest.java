@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureWireMock
+@AutoConfigureWireMock(port = 19090)
 class BookClientTest {
     @Autowired
     private ObjectMapper mapper;

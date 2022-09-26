@@ -1,11 +1,26 @@
-  
-  ##
-  # Spring Cloud - Open Feign
-  ##
-  feign:
+
+##
+# Spring Cloud - Open Feign
+##
+feign:
     client:
-      config:
-        default:
-          connectTimeout: 30000
-          readTimeout: 30000
-          loggerLevel: FULL
+        config:
+            default:
+                loggerLevel: basic
+                connectTimeout: 30000
+                readTimeout: 30000
+            bookClient:
+                loggerLevel: full
+                connectTimeout: 5000
+                readTimeout: 5000
+logging:
+    level:
+        {{directory_path_code}}.samples.clients: DEBUG
+
+##
+# Book Client config
+##
+api:
+    book:
+        url: ${BOOK_URL:localhost:9090/api/books}
+
