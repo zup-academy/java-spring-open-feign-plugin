@@ -39,6 +39,8 @@ The following steps show how to apply the plugin to an existing Java Spring Boot
     ```
 Nice! You're ready for production I think 🥳
 
+[See here the benefits and how to use the Java Spring Open Feign Plugin](https://www.youtube.com/watch?v=JhG3LjNhggA)
+
 ## support
 
 If you need help, open a [Plugin Github repo issue](https://github.com/zup-academy/java-spring-open-feign-plugin).
